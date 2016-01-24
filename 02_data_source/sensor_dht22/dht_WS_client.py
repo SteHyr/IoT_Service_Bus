@@ -6,11 +6,15 @@ import json
 import time
 import datetime
 
-with open('../configDevice.json') as config_file:
+with open('/home/pi/configDevice.json') as config_file:
     device_infos = json.load(config_file)
 device_id = device_infos['device_ID']
 
-divID = 'dht22_001'
+
+with open('/home/pi/configBrocker.json') as config_file:
+    brocker_infos = json.load(config_file)
+brocker_IP = brocker_infos['brocker_IP']
+brocker_port = brocker_infos['brocker_port']
 
 
 def on_message(ws, message):
@@ -36,8 +40,11 @@ def on_open(ws):
 
 
 if __name__ == "__main__":
+    brocker_location = "ws://" + brocker_IP + ":" + brocker_port + "/"
+    print brocker_location
+    
     websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("ws://localhost:8080/",
+    ws = websocket.WebSocketApp(brocker_location,
                                 on_message = on_message,
                                 on_error = on_error,
                                 on_close = on_close)
